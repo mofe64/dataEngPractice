@@ -48,3 +48,4 @@
 ### In Variables.tf
 
 1. Locals - are constants
+2. Variables - if a variable does not have a default value, we have to provide the value when running terraform plan
