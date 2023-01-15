@@ -11,7 +11,10 @@ RUN apt-get update -qq && apt-get install vim -qqq
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir pandas sqlalchemy psycopg2-binary
 
+
+# set up gcloud within our airflow so we can use it
 # Ref: https://airflow.apache.org/docs/docker-stack/recipes.html
 
 SHELL ["/bin/bash", "-o", "pipefail", "-e", "-u", "-x", "-c"]
