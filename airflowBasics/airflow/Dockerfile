@@ -11,6 +11,7 @@ RUN apt-get update -qq && apt-get install vim -qqq
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+# dependencies needed for local postgres
 RUN pip install --no-cache-dir pandas sqlalchemy psycopg2-binary
 
 
