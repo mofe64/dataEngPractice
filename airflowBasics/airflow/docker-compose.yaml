@@ -58,13 +58,26 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+
+    # GOOGLE_APPLICATION_CREDENTIALS: /.google/credentials/google_credentials.json
+    # AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: 'google-cloud-platform://?extra__google_cloud_platform__key_path=/.google/credentials/google_credentials.json'
+
+    GOOGLE_APPLICATION_CREDENTIALS: /.google/credentials/debug-test.json
+    AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: 'google-cloud-platform://?extra__google_cloud_platform__key_path=/.google/credentials/debug-test.json'
+
+
+    GCP_PROJECT_ID: 'booming-edge-372615'
+    GCP_GCS_BUCKET: "first_data_lake_booming-edge-372615"
+    
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
+    - ~/.google/credentials/:/.google/credentials:ro
+    
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -164,6 +177,8 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
+  # this service is the initializer for airflow, it setups the neccesary env variables as well as the backend for airflow and configures
+  # the dags, logs, and plugins dir
   airflow-init:
     <<: *airflow-common
     entrypoint: /bin/bash
