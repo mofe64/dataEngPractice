@@ -68,9 +68,16 @@ x-airflow-common:
     GOOGLE_APPLICATION_CREDENTIALS: /.google/credentials/debug-test.json
     AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: 'google-cloud-platform://?extra__google_cloud_platform__key_path=/.google/credentials/debug-test.json'
 
-
+    # GCP ENV VARS
     GCP_PROJECT_ID: 'booming-edge-372615'
     GCP_GCS_BUCKET: "first_data_lake_booming-edge-372615"
+
+    # POSTGRES ENV VARS FOR LOCAL INGEST WE USE INTERPOLATION CAUSE WE WANT TO READ THEM FROM OUR env file
+    PG_HOST: "${PG_HOST}"
+    PG_USER: "${PG_USER}"
+    PG_PASSWORD: "${PG_PASSWORD}"
+    PG_PORT: "${PG_PORT}"
+    PG_DATABASE: "${PG_DATABASE}"
     
   volumes:
     - ./dags:/opt/airflow/dags
