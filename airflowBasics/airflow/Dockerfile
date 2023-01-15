@@ -1,4 +1,5 @@
 # First-time build can take upto 10 mins.
+# We download apcahe, then install our requirements, then downalod gcloud cli and finally add gcloud to path
 
 FROM apache/airflow:2.2.3
 
@@ -35,7 +36,7 @@ RUN DOWNLOAD_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/goo
 
 WORKDIR $AIRFLOW_HOME
 
-COPY scripts scripts
-RUN chmod +x scripts
+# COPY scripts scripts
+# RUN chmod +x scripts
 
 USER $AIRFLOW_UID
