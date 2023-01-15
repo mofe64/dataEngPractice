@@ -4,7 +4,7 @@ from airflow import DAG
 
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-from airflow_local_ingest_script import ingest
+from local.airflow_local_ingest_script import ingest
 
 # Note this current implementation will download only one version of the dataset, which is 2022-01 monthly
 # As a result of the current implementation the table created in postgres will be destroyed and recreated every month
