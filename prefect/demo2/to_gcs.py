@@ -3,6 +3,7 @@ import pandas as pd
 from prefect import flow, task
 import os
 from prefect_gcp.cloud_storage import GcsBucket
+from google.cloud import storage
 
 
 @task(retries=3)
@@ -16,6 +17,9 @@ def fetch(dataset_url: str) -> pd.DataFrame:
     print("download complete ...")
     # we read parquet file no chunks
     df = pd.read_parquet(file_name, engine='pyarrow')
+    # modify specific columns in df to change their type to datetime
+    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
     return df
 
 
@@ -26,8 +30,6 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df['passenger_count'] != 0]
     print(
         f"post : missing passenger count: {df['passenger_count'].isin([0]).sum()}")
-    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
     return df
 
 
@@ -41,7 +43,10 @@ def write_local(df: pd.DataFrame, file_name: str) -> Path:
 
 @task()
 def write_gcs(path: Path) -> None:
-    gcs_block = GcsBucket.load("bucketname")
+    # WARNING; WORKAROUND to prevent timeout for files > 6 MB on 800 kbps upload link.
+    storage.blob._DEFAULT_CHUNKSIZE = 5 * 1024 * 1024  # 5 MB
+    storage.blob._MAX_MULTIPART_SIZE = 5 * 1024 * 1024  # 5 MB
+    gcs_block = GcsBucket.load("prefect-gcs-test-block")
     gcs_block.upload_from_path(
         from_path=f"{path}",
         to_path=path
@@ -57,3 +62,7 @@ def etl_web_to_gcs() -> None:
     cleaned_data = clean(df)
     path = write_local(df=cleaned_data, file_name="ny_taxi")
     write_gcs(path)
+
+
+if __name__ == '__main__':
+    etl_web_to_gcs()
