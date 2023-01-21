@@ -65,4 +65,4 @@ def etl_web_to_gcs(url) -> None:
 
 if __name__ == '__main__':
     url = 'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet'
-    etl_web_to_gcs()
+    etl_web_to_gcs(url)

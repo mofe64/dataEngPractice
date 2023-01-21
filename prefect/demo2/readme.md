@@ -24,7 +24,7 @@ we can also set the schedule after the deployment has been created with the set 
     prefect deployment build path_to_file:flow_entrypoint -n name --cron "0 0 * * *"
 ```
 
-scheduling can alos be done via the UI and it supports interval, cron and rule based scheduling
+scheduling can alos be done via the UI and it supports interval, cron and rule based schedulling
 
 to apply our deployment we run
 
