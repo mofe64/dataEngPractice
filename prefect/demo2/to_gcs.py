@@ -33,10 +33,12 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# Note this uploads our data as a file called data\filename.parquet
+# figure out how to do create a path for directories
 @task()
 def write_local(df: pd.DataFrame, file_name: str) -> Path:
     """Write df out locally as parquet file"""
-    path = Path(f"data/{file_name}.parquet")
+    path = Path(f"data\{file_name}.parquet")
     df.to_parquet(path, compression="gzip")
     return path
 
