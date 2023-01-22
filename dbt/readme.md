@@ -12,6 +12,12 @@ This will install dbt-core and dbt-postgres only
 
 [Available dbt adapters](https://docs.getdbt.com/docs/supported-data-platforms)
 
+To set up a new dbt project we run
+
+```
+    dbt init
+```
+
 When you invoke dbt from the command line, dbt parses our dbt_project.yml and obtains the profile name,
 which dbt needs to connect to your data warehouse.
 dbt then checks your profiles.yml file for a profile with the same name.
