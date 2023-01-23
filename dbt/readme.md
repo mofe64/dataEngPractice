@@ -117,3 +117,35 @@ Sample macro
         end
     {%- endmacro %}
 ```
+
+## Packages
+
+like libs in other programming langs
+standalone dbt projects with models and macros that tackle a specific area
+By adding a package, the packages models and macros will be part of our project
+We import packages in the packages.yml file and by running `dbt deps`
+We can find useful packages [here](https://hub.getdbt.com/)
+
+## Variables
+
+useful for defining values that should be used across the project
+with a macro dbt allows us to provide data to models for compilation
+to use a variable we use the {{var('...')}} function
+variables can be defined in two ways in the dbt_project.yml file or on the command line
+
+## Seeds
+
+We can use seeds by adding the Csv file we want to use in our seeds folder and running `dbt seed`
+This will create a table from the csv file in our db. dbt will use the same data types found in the csv file as the data types
+for each column.
+If we do not want this in our dbt_project.yml
+dbt seed by default appends the values to table if it already exists to drop and recreate the table run
+`dbt seed --full-refresh`
+
+```yml
+seeds:
+  project_name:
+    seed_file_name:
+      +column_types:
+        columnname: columntype
+```
