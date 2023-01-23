@@ -1,0 +1,10 @@
+version: 2
+# source name can be any name we want, doesn't have to map to db
+# our database in case of bigquery is our dataset
+sources:
+  - name: staging
+    database: sample_ny_data
+    schema: public
+
+    tables:
+      - name: yellow_taxi_trips
