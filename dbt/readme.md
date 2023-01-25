@@ -133,6 +133,13 @@ with a macro dbt allows us to provide data to models for compilation
 to use a variable we use the {{var('...')}} function
 variables can be defined in two ways in the dbt_project.yml file or on the command line
 
+in the dbt_project.yml file they are defined as follows
+
+```yml
+vars:
+  payment_type_values: [1, 2, 3, 4, 5, 6]
+```
+
 ## Seeds
 
 We can use seeds by adding the Csv file we want to use in our seeds folder and running `dbt seed`
@@ -149,3 +156,54 @@ seeds:
       +column_types:
         columnname: columntype
 ```
+
+### Note - DBT BUILD
+
+dbt build is an all in command, it will run the models, seeds, and tests all at once
+
+## Tests & Documentation
+
+Tests are assumptions we make about our data. In dbt tests are essentially a select query.
+These assumptions get compiled to sql that returns the amounts of failing records
+Tests are defined in the schema.yml file where our models are located.
+We run our tests by running `dbt test`
+we can also add documentation to our project in the schema.yml file as seen below
+
+```yml
+- name: stg_green_tripdata
+  description: >
+    Trip made by green taxis, also known as boro taxis and street-hail liveries.
+    Green taxis may respond to street hails,but only in the areas indicated in green on the
+    map (i.e. above W 110 St/E 96th St in Manhattan and in the boroughs).
+    The records were collected and provided to the NYC Taxi and Limousine Commission (TLC) by
+    technology service providers.
+  columns:
+    - name: tripid
+      description: Primary key for this table, generated with a concatenation of vendorid+pickup_datetime
+      tests:
+        - unique:
+            severity: warn
+        - not_null:
+            severity: warn
+    - name: VendorID
+      description: >
+        A code indicating the TPEP provider that provided the record.
+        1= Creative Mobile Technologies, LLC;
+        2= VeriFone Inc.
+    - name: Pickup_locationid
+      description: locationid where the meter was engaged.
+      tests:
+        - relationships:
+            to: ref('taxi_zone_lookup')
+            field: locationid
+            severity: warn
+```
+
+## Deployments
+
+### Running a DBT project in prod
+
+dbt cloud includes a scheduler we can use to create jobs to run in production
+A single job can run multiple commands
+jobs can also be triggered manually or on schedule
+A job can also generate documentation that can be viewed under the run information
